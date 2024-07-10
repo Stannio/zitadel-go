@@ -32,6 +32,20 @@ type Authenticator[T Ctx] struct {
 // Option allows customization of the [Authenticator] such as logging and more.
 type Option[T Ctx] func(authorizer *Authenticator[T])
 
+// WithSessionStore allows a session store other than [InMemorySessions].
+func WithSessionStore[T Ctx](sessions Sessions[T]) Option[T] {
+	return func(a *Authenticator[T]) {
+		a.sessions = sessions
+	}
+}
+
+// WithSessionCookieName allows a session cookie name other than "zitadel.session".
+func WithSessionCookieName[T Ctx](cookieName string) Option[T] {
+	return func(a *Authenticator[T]) {
+		a.sessionCookieName = cookieName
+	}
+}
+
 // WithLogger allows a logger other than slog.Default().
 //
 // EXPERIMENTAL: Will change to log/slog import after we drop support for Go 1.20
